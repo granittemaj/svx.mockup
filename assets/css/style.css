@@ -394,3 +394,8 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
   .blob,.hero-badge .spin,.marquee-track,.scrollcue .ln,.interlude .blob.t1{animation:none !important}
   .hero-cine h1 .ln{opacity:1; transform:none; filter:none; animation:none}
 }
+
+/* labelled contact emails (General / Media) in the footer */
+.foot-col .foot-eitem{margin-bottom:12px}
+.foot-col .foot-eitem a{margin-bottom:0}
+.foot-col .foot-elabel{display:block; font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:rgba(246,242,233,.6); margin-bottom:1px}
