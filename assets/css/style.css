@@ -405,13 +405,11 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
 .split-head .eyebrow{margin-bottom:0}
 .split-head h2{font-size:clamp(34px,4.6vw,58px); font-weight:700; margin-top:16px; line-height:1.04; max-width:66%}
 .split-body{margin-top:26px; max-width:66%}
-.split-body p{font-size:18px; line-height:1.7; color:var(--text-dim); margin-bottom:16px}
+.split-body p{font-size:21px; line-height:1.55; color:var(--text); margin-bottom:20px}
 .split-body p:last-child{margin-bottom:0}
-.split-body .lead{font-size:21px; line-height:1.55; color:var(--text); margin-bottom:20px}
-.dark-sec .split-body p{color:var(--on-ink)}
-.dark-sec .split-body .lead{color:var(--on-ink-strong)}
+.dark-sec .split-body p{color:var(--on-ink-strong)}
 @media(max-width:1100px){.split-head h2,.split-body{max-width:80%}}
-@media(max-width:900px){.split-head{margin-bottom:34px} .split-head h2,.split-body{max-width:100%} .split-body .lead{font-size:18px}}
+@media(max-width:900px){.split-head{margin-bottom:34px} .split-head h2,.split-body{max-width:100%} .split-body p{font-size:18px}}
 /* the stakes supporting callout chips: full-width grid with a hover lift */
 .stakes-callouts{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:0}
 .stakes-callouts .callout{display:flex; align-items:center; font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em; color:var(--on-ink-strong); background:rgba(246,242,233,.05); border:1px solid var(--on-ink-line); border-radius:14px; padding:16px 20px; transition:transform .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease), box-shadow .28s var(--ease)}
