@@ -400,11 +400,26 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
 .foot-col .foot-eitem a{margin-bottom:0}
 .foot-col .foot-elabel{display:block; font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:rgba(246,242,233,.6); margin-bottom:1px}
 
-/* stakes body + callout chips, and donut charts (matches theme) */
-.stakes-body{max-width:820px; margin:6px auto 34px}
-.stakes-body p{font-size:17px; line-height:1.7; color:var(--on-ink); margin-bottom:16px}
-.stakes-callouts{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-width:960px; margin:0 auto}
-.stakes-callouts .callout{display:inline-flex; align-items:center; font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em; color:var(--on-ink-strong); background:rgba(246,242,233,.05); border:1px solid var(--on-ink-line); border-radius:100px; padding:11px 20px}
+/* homepage section intros: single column, title and body copy capped at 2/3 width */
+.split-head{margin-bottom:44px}
+.split-head .eyebrow{margin-bottom:0}
+.split-head h2{font-size:clamp(34px,4.6vw,58px); font-weight:700; margin-top:16px; line-height:1.04; max-width:66%}
+.split-body{margin-top:26px; max-width:66%}
+.split-body p{font-size:18px; line-height:1.7; color:var(--text-dim); margin-bottom:16px}
+.split-body p:last-child{margin-bottom:0}
+.split-body .lead{font-size:21px; line-height:1.55; color:var(--text); margin-bottom:20px}
+.dark-sec .split-body p{color:var(--on-ink)}
+.dark-sec .split-body .lead{color:var(--on-ink-strong)}
+@media(max-width:1100px){.split-head h2,.split-body{max-width:80%}}
+@media(max-width:900px){.split-head{margin-bottom:34px} .split-head h2,.split-body{max-width:100%} .split-body .lead{font-size:18px}}
+/* the stakes supporting callout chips: full-width grid with a hover lift */
+.stakes-callouts{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin:0}
+.stakes-callouts .callout{display:flex; align-items:center; font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em; color:var(--on-ink-strong); background:rgba(246,242,233,.05); border:1px solid var(--on-ink-line); border-radius:14px; padding:16px 20px; transition:transform .28s var(--ease), border-color .28s var(--ease), background .28s var(--ease), box-shadow .28s var(--ease)}
+.stakes-callouts .callout::before{content:""; flex:0 0 auto; width:7px; height:7px; border-radius:50%; background:var(--on-ink-line); margin-right:12px; transition:background .28s var(--ease), box-shadow .28s var(--ease)}
+.stakes-callouts .callout:hover{transform:translateY(-4px); border-color:rgba(232,116,59,.6); background:rgba(232,116,59,.08); box-shadow:0 12px 30px -14px rgba(0,0,0,.5)}
+.stakes-callouts .callout:hover::before{background:var(--amber-2); box-shadow:0 0 0 4px rgba(232,116,59,.18)}
+@media(max-width:900px){.stakes-callouts{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.stakes-callouts{grid-template-columns:1fr}}
 .donut-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:760px; margin:0 auto}
 .donut-card{background:rgba(246,242,233,.04); border:1px solid var(--on-ink-line); border-radius:20px; padding:40px 34px; text-align:center; backdrop-filter:blur(4px)}
 .donut-wrap{position:relative; width:172px; height:172px; margin:0 auto 20px}
@@ -417,11 +432,9 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
 .pillars{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
 @media(max-width:680px){.donut-grid{grid-template-columns:1fr; gap:18px}}
 
-/* hero fits longer headlines; stakes body/callouts align left with the heading */
+/* hero fits longer headlines */
 .hero-inner{max-width:900px}
 .hero-cine h1{font-size:clamp(38px,5.6vw,74px); letter-spacing:-.035em; line-height:1.02; text-wrap:balance}
-.stakes-body{max-width:760px; margin:0 0 30px}
-.stakes-callouts{justify-content:flex-start; margin:0}
 .donut-grid{grid-template-columns:1fr 1fr; gap:24px; max-width:none; margin:0}
 @media(max-width:680px){
   .logorow .kicker{font-size:11px; letter-spacing:.08em}
