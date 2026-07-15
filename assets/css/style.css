@@ -399,3 +399,20 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
 .foot-col .foot-eitem{margin-bottom:12px}
 .foot-col .foot-eitem a{margin-bottom:0}
 .foot-col .foot-elabel{display:block; font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:rgba(246,242,233,.6); margin-bottom:1px}
+
+/* stakes body + callout chips, and donut charts (matches theme) */
+.stakes-body{max-width:820px; margin:6px auto 34px}
+.stakes-body p{font-size:17px; line-height:1.7; color:var(--on-ink); margin-bottom:16px}
+.stakes-callouts{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; max-width:960px; margin:0 auto}
+.stakes-callouts .callout{display:inline-flex; align-items:center; font-family:"JetBrains Mono",monospace; font-size:13px; letter-spacing:.02em; color:var(--on-ink-strong); background:rgba(246,242,233,.05); border:1px solid var(--on-ink-line); border-radius:100px; padding:11px 20px}
+.donut-grid{display:grid; grid-template-columns:1fr 1fr; gap:24px; max-width:760px; margin:0 auto}
+.donut-card{background:rgba(246,242,233,.04); border:1px solid var(--on-ink-line); border-radius:20px; padding:40px 34px; text-align:center; backdrop-filter:blur(4px)}
+.donut-wrap{position:relative; width:172px; height:172px; margin:0 auto 20px}
+.donut{width:172px; height:172px}
+.donut-track{stroke:rgba(246,242,233,.1)}
+.donut-cost .donut-fill{stroke:#E8743B}
+.donut-emissions .donut-fill{stroke:#46c7b8}
+.donut-center{position:absolute; inset:0; display:grid; place-items:center; font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:38px; letter-spacing:-.02em; color:var(--on-ink-strong)}
+.donut-cap{font-size:15.5px; line-height:1.5; color:var(--on-ink); max-width:270px; margin:0 auto}
+.pillars{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+@media(max-width:680px){.donut-grid{grid-template-columns:1fr; gap:18px}}
