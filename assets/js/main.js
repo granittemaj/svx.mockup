@@ -188,7 +188,7 @@
   function buildLegend(m){
     var html=m.segs.map(function(s){ var c=s.key==='cathode'?COL.cathode:s.key==='other'?COL.other:COL.anode;
       return '<span class="dl-item"><span class="dl-sw" style="background:'+c+'"></span>'+esc(s.name)+'</span>'; }).join('');
-    html+='<span class="dl-item"><span class="dl-sw" style="background:'+COL.svx+'"></span>SVX zone · '+pc(m.segs[0].svx)+'</span>';
+    html+='<span class="dl-item"><span class="dl-sw" style="background:'+COL.svx+'"></span>'+esc(m.segs[0].svxName||'SVX Reduction Potential')+'</span>';
     m.legend.innerHTML=html;
   }
   function render(m){
@@ -217,7 +217,7 @@
       var big=m.host.querySelector('.d-big'), sm=m.host.querySelector('.d-sm');
       [].forEach.call(m.host.querySelectorAll('.arc-seg,.arc-svx'), function(x){ x.classList.add('dimmed'); });
       p.classList.remove('dimmed'); p.classList.add('hot');
-      if(p.classList.contains('arc-svx')){ big.textContent=pc(m.segs[0].svx); sm.textContent='SVX potential'; }
+      if(p.classList.contains('arc-svx')){ big.textContent='SVX'; sm.textContent=m.segs[0].svxShort||'reduction potential'; }
       else { big.textContent=pc(parseFloat(p.getAttribute('data-val'))); sm.textContent=m.shortOf(p.getAttribute('data-key')); }
     });
     m.wrap.addEventListener('mouseout', function(e){
