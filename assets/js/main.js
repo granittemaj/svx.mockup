@@ -82,9 +82,10 @@
 
 /* ===== Living cathode lattice — hero canvas ===== */
 (function(){
-  var canvas=document.getElementById('field'); if(!canvas) return;
-  var ctx=canvas.getContext('2d'), root=document.documentElement;
+  var root=document.documentElement;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function initField(canvas){
+  var ctx=canvas.getContext('2d');
   var nodes=[], edges=[], adj=[], pulses=[], W=0,H=0,DPR=1, mx=.5,my=.5, tmx=.5,tmy=.5, t=0;
 
   function build(){
@@ -156,4 +157,6 @@
     setInterval(spawn, 900); spawn();
     requestAnimationFrame(frame);
   }
+  }
+  var fields=document.querySelectorAll('.field'); Array.prototype.forEach.call(fields, initField);
 })();

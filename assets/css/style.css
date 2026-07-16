@@ -439,3 +439,21 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
   .logos{gap:12px 22px}
   .logos span{font-size:15px}
 }
+
+/* ---------- Technology / Careers hero: living cathode lattice in the background ---------- */
+.page-hero.has-field{overflow:hidden}
+.page-hero .field{position:absolute; inset:0; width:100%; height:100%; z-index:1; opacity:.85}
+.page-hero.has-field::after{content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(100deg,var(--bg) 22%,rgba(0,0,0,0) 72%)}
+.page-hero.has-field .wrap{position:relative; z-index:2}
+.page-hero.has-field h1{max-width:min(760px,92%); font-size:clamp(32px,4vw,52px); line-height:1.06}
+.page-hero.has-field .lede{max-width:540px}
+@media(max-width:640px){ .page-hero.has-field::after{background:linear-gradient(180deg,var(--bg) 55%,rgba(0,0,0,0) 100%)} }
+
+/* ---------- Capabilities: aligned two-column index list ---------- */
+.caps{display:grid; grid-template-columns:1fr 1fr; column-gap:60px; border-top:1px solid var(--border)}
+.cap{display:grid; grid-template-columns:auto 1fr; gap:18px; padding:22px 2px; border-bottom:1px solid var(--border-soft)}
+.cap-n{font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--teal); letter-spacing:.08em; padding-top:4px}
+.cap h4{font-size:17px; font-weight:600; font-family:"Hanken Grotesk",sans-serif; letter-spacing:-.01em; margin-bottom:5px}
+.cap p{font-size:13.5px; line-height:1.55; color:var(--text-dim)}
+@media(max-width:760px){ .caps{grid-template-columns:1fr; border-top:none} }
