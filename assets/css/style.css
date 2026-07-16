@@ -477,6 +477,5 @@ body::after{content:""; position:fixed; inset:0; z-index:9998; pointer-events:no
 .dial-legend{display:flex; justify-content:center; flex-wrap:wrap; gap:8px 16px; margin-top:6px}
 .dl-item{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--on-ink)}
 .dl-sw{width:11px; height:11px; border-radius:3px; flex:none}
-.dial-note{margin-top:20px; font-size:12px; color:var(--on-ink); opacity:.6; font-family:"JetBrains Mono",monospace; letter-spacing:.02em; text-align:center}
 @media(max-width:760px){.dial-grid{grid-template-columns:1fr; gap:20px}}
 @media(prefers-reduced-motion:reduce){.dial-svg{opacity:1; transform:none; transition:none}}
