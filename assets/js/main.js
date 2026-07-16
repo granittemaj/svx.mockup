@@ -161,16 +161,85 @@
   var fields=document.querySelectorAll('.field'); Array.prototype.forEach.call(fields, initField);
 })();
 
-/* ===== Pie charts: scroll-triggered assembly + count-up ===== */
+/* ===== Cathode half-dials: build, hover-focus, scenario toggle, scroll-in ===== */
 (function(){
-  var pies=document.querySelectorAll('.pie-anim'); if(!pies.length) return;
+  var wraps=[].slice.call(document.querySelectorAll('.dialwrap[data-metric]'));
+  if(!wraps.length) return;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  function finalize(n){ n.textContent=parseFloat(n.dataset.target).toFixed(1)+'%'; }
-  function countUp(n){ var t=parseFloat(n.dataset.target); if(isNaN(t)){return;} var dur=1100,st=null;
-    function step(ts){ if(!st)st=ts; var p=Math.min((ts-st)/dur,1); var e=1-Math.pow(1-p,3); n.textContent=(t*e).toFixed(1)+'%'; if(p<1){requestAnimationFrame(step);} else {finalize(n);} }
-    requestAnimationFrame(step); }
-  function run(svg){ svg.classList.add('in'); svg.querySelectorAll('.pie-num').forEach(function(n){ if(reduce){finalize(n);} else {setTimeout(function(){countUp(n);},950);} }); }
-  if(!('IntersectionObserver' in window)){ pies.forEach(run); return; }
-  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ run(e.target); io.unobserve(e.target); } }); },{threshold:0.35});
-  pies.forEach(function(s){ io.observe(s); });
+  var CX=165, CY=165, R=120, SPAN=180;
+  var COL={cathode:'#E8743B', cathode2:'#F2A35E', svx:'#FFC24B', other:'#4FA6A0', anode:'#AEB89C'};
+  function polar(cx,cy,r,d){ var a=d*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+  function arcD(cx,cy,r,a0,a1){ var p0=polar(cx,cy,r,a0), p1=polar(cx,cy,r,a1), lg=(a1-a0)>180?1:0;
+    return 'M '+p0[0].toFixed(2)+' '+p0[1].toFixed(2)+' A '+r+' '+r+' 0 '+lg+' 1 '+p1[0].toFixed(2)+' '+p1[1].toFixed(2); }
+  function pc(v){ return v.toFixed(1)+'%'; }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+  function colorOf(k,id){ return k==='cathode'?('url(#dcg-'+id+')'):k==='other'?COL.other:COL.anode; }
+
+  var models=[];
+  wraps.forEach(function(wrap){
+    var segs; try{ segs=JSON.parse(wrap.getAttribute('data-segs')); }catch(e){ return; }
+    var m={ wrap:wrap, id:wrap.getAttribute('data-metric'), title:wrap.getAttribute('data-title'),
+      segs:segs, host:wrap.querySelector('.dial-svg'), legend:wrap.querySelector('.dial-legend'),
+      catShow:segs[0].val, on:false };
+    m.shortOf=function(k){ for(var i=0;i<segs.length;i++){ if(segs[i].key===k) return segs[i].short; } return k; };
+    buildLegend(m); render(m); wireHover(m); models.push(m);
+  });
+
+  function buildLegend(m){
+    var html=m.segs.map(function(s){ var c=s.key==='cathode'?COL.cathode:s.key==='other'?COL.other:COL.anode;
+      return '<span class="dl-item"><span class="dl-sw" style="background:'+c+'"></span>'+esc(s.name)+'</span>'; }).join('');
+    html+='<span class="dl-item"><span class="dl-sw" style="background:'+COL.svx+'"></span>SVX zone · '+pc(m.segs[0].svx)+'</span>';
+    m.legend.innerHTML=html;
+  }
+  function render(m){
+    var s=m.segs, svx=s[0].svx||0, id=m.id, deg=SPAN/100;
+    var vals=[m.catShow, s[1].val, s[2].val], keys=['cathode','other','anode'];
+    var acc=180, seg='', lab='', end=0;
+    vals.forEach(function(v,i){
+      var a0=acc, a1=acc+v*deg, mid=(a0+a1)/2;
+      seg+='<path class="arc-seg" data-key="'+keys[i]+'" data-val="'+v.toFixed(1)+'" stroke="'+colorOf(keys[i],id)+'" d="'+arcD(CX,CY,R,a0,a1)+'"/>';
+      var lp=polar(CX,CY,R+30,mid), anc=lp[0]<CX-4?'end':(lp[0]>CX+4?'start':'middle');
+      lab+='<g class="dlab" text-anchor="'+anc+'"><text class="dl-cat" x="'+lp[0].toFixed(1)+'" y="'+(lp[1]-2).toFixed(1)+'">'+esc(m.shortOf(keys[i]))+'</text><text class="dl-num" x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+14).toFixed(1)+'">'+pc(v)+'</text></g>';
+      acc=a1; end+=v;
+    });
+    var baseEnd=s[0].val-svx;
+    var svxg='<path class="arc-svx" d="'+arcD(CX,CY,R,180+baseEnd*deg,180+m.catShow*deg)+'"/>';
+    m.host.innerHTML='<svg viewBox="0 0 330 210" role="img" aria-label="'+esc(m.title)+'">'
+      +'<defs><linearGradient id="dcg-'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+COL.cathode+'"/><stop offset="1" stop-color="'+COL.cathode2+'"/></linearGradient></defs>'
+      +'<g class="d-segs">'+seg+'</g><g class="d-svx">'+svxg+'</g><g class="d-labs">'+lab+'</g>'
+      +'<g class="d-cx" text-anchor="middle"><text class="d-big" x="165" y="150">'+pc(m.catShow)+'</text><text class="d-sm" x="165" y="171">cathode share</text></g></svg>';
+  }
+  function restore(m){ var big=m.host.querySelector('.d-big'), sm=m.host.querySelector('.d-sm');
+    if(big) big.textContent=pc(m.catShow); if(sm) sm.textContent='cathode share'; }
+  function wireHover(m){
+    m.wrap.addEventListener('mouseover', function(e){
+      var p=e.target.closest?e.target.closest('.arc-seg,.arc-svx'):null; if(!p||!m.host.contains(p)) return;
+      var big=m.host.querySelector('.d-big'), sm=m.host.querySelector('.d-sm');
+      [].forEach.call(m.host.querySelectorAll('.arc-seg,.arc-svx'), function(x){ x.classList.add('dimmed'); });
+      p.classList.remove('dimmed'); p.classList.add('hot');
+      if(p.classList.contains('arc-svx')){ big.textContent=pc(m.segs[0].svx); sm.textContent='SVX potential'; }
+      else { big.textContent=pc(parseFloat(p.getAttribute('data-val'))); sm.textContent=m.shortOf(p.getAttribute('data-key')); }
+    });
+    m.wrap.addEventListener('mouseout', function(e){
+      var p=e.target.closest?e.target.closest('.arc-seg,.arc-svx'):null; if(!p) return;
+      [].forEach.call(m.host.querySelectorAll('.arc-seg,.arc-svx'), function(x){ x.classList.remove('dimmed','hot'); });
+      restore(m);
+    });
+  }
+  function countUp(m){
+    var nodes=[m.host.querySelector('.d-big')].concat([].slice.call(m.host.querySelectorAll('.dl-num')));
+    nodes.forEach(function(n){ if(!n) return; var t=parseFloat(n.textContent); if(isNaN(t)) return; var dur=1000, st=null;
+      function step(ts){ if(!st)st=ts; var p=Math.min((ts-st)/dur,1), e=1-Math.pow(1-p,3);
+        n.textContent=(t*e).toFixed(1)+'%'; if(p<1){ requestAnimationFrame(step); } else { n.textContent=t.toFixed(1)+'%'; } }
+      requestAnimationFrame(step);
+    });
+  }
+  function reveal(m){ m.wrap.classList.add('in'); if(!reduce) countUp(m); }
+  if(reduce || !('IntersectionObserver' in window)){ models.forEach(function(m){ m.wrap.classList.add('in'); }); return; }
+  function find(el){ for(var i=0;i<models.length;i++){ if(models[i].wrap===el) return models[i]; } return null; }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ var m=find(e.target); if(m) reveal(m); io.unobserve(e.target); } }); },{threshold:0.3});
+  models.forEach(function(m){ io.observe(m.wrap); });
+  // safety net: reveal any in-viewport dial the observer may have missed
+  setTimeout(function(){ models.forEach(function(m){ if(!m.wrap.classList.contains('in')){ var r=m.wrap.getBoundingClientRect(); if(r.top < (window.innerHeight||0) && r.bottom > 0){ reveal(m); io.unobserve(m.wrap); } } }); }, 1600);
 })();
+
