@@ -160,3 +160,17 @@
   }
   var fields=document.querySelectorAll('.field'); Array.prototype.forEach.call(fields, initField);
 })();
+
+/* ===== Pie charts: scroll-triggered assembly + count-up ===== */
+(function(){
+  var pies=document.querySelectorAll('.pie-anim'); if(!pies.length) return;
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function finalize(n){ n.textContent=parseFloat(n.dataset.target).toFixed(1)+'%'; }
+  function countUp(n){ var t=parseFloat(n.dataset.target); if(isNaN(t)){return;} var dur=1100,st=null;
+    function step(ts){ if(!st)st=ts; var p=Math.min((ts-st)/dur,1); var e=1-Math.pow(1-p,3); n.textContent=(t*e).toFixed(1)+'%'; if(p<1){requestAnimationFrame(step);} else {finalize(n);} }
+    requestAnimationFrame(step); }
+  function run(svg){ svg.classList.add('in'); svg.querySelectorAll('.pie-num').forEach(function(n){ if(reduce){finalize(n);} else {setTimeout(function(){countUp(n);},950);} }); }
+  if(!('IntersectionObserver' in window)){ pies.forEach(run); return; }
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ run(e.target); io.unobserve(e.target); } }); },{threshold:0.35});
+  pies.forEach(function(s){ io.observe(s); });
+})();
