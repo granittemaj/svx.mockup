@@ -90,7 +90,7 @@ section{position:relative}
 .page-hero .lede{margin-top:24px; max-width:620px}
 
 /* ---------- STAT STRIP ---------- */
-.stat-strip{display:grid; grid-template-columns:repeat(4,1fr); margin-top:64px; border-top:1px solid var(--border); border-bottom:1px solid var(--border)}
+.stat-strip{display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border)}
 .stat-strip .cell{padding:26px 24px 24px; border-right:1px solid var(--border-soft)}
 .stat-strip .cell:last-child{border-right:none}
 .stat-strip .num{font-family:"Bricolage Grotesque",sans-serif; font-weight:700; font-size:clamp(34px,4vw,46px); letter-spacing:-.03em; color:var(--text)}
