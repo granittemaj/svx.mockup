@@ -171,7 +171,7 @@
   function polar(cx,cy,r,d){ var a=d*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
   function arcD(cx,cy,r,a0,a1){ var p0=polar(cx,cy,r,a0), p1=polar(cx,cy,r,a1), lg=(a1-a0)>180?1:0;
     return 'M '+p0[0].toFixed(2)+' '+p0[1].toFixed(2)+' A '+r+' '+r+' 0 '+lg+' 1 '+p1[0].toFixed(2)+' '+p1[1].toFixed(2); }
-  function pc(v){ return v.toFixed(1)+'%'; }
+  function pc(v){ return '~'+Math.round(v)+'%'; }
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
   function colorOf(k,id){ return k==='cathode'?('url(#dcg-'+id+')'):k==='other'?COL.other:COL.anode; }
 
@@ -207,10 +207,10 @@
     m.host.innerHTML='<svg viewBox="0 0 330 210" role="img" aria-label="'+esc(m.title)+'">'
       +'<defs><linearGradient id="dcg-'+id+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="'+COL.cathode+'"/><stop offset="1" stop-color="'+COL.cathode2+'"/></linearGradient></defs>'
       +'<g class="d-segs">'+seg+'</g><g class="d-svx">'+svxg+'</g><g class="d-labs">'+lab+'</g>'
-      +'<g class="d-cx" text-anchor="middle"><text class="d-big" x="165" y="150">'+pc(m.catShow)+'</text><text class="d-sm" x="165" y="171">cathode share</text></g></svg>';
+      +'<g class="d-cx" text-anchor="middle"><text class="d-big" x="165" y="150">'+pc(m.catShow)+'</text><text class="d-sm" x="165" y="171">approx. cathode share</text></g></svg>';
   }
   function restore(m){ var big=m.host.querySelector('.d-big'), sm=m.host.querySelector('.d-sm');
-    if(big) big.textContent=pc(m.catShow); if(sm) sm.textContent='cathode share'; }
+    if(big) big.textContent=pc(m.catShow); if(sm) sm.textContent='approx. cathode share'; }
   function wireHover(m){
     m.wrap.addEventListener('mouseover', function(e){
       var p=e.target.closest?e.target.closest('.arc-seg,.arc-svx'):null; if(!p||!m.host.contains(p)) return;
@@ -228,9 +228,9 @@
   }
   function countUp(m){
     var nodes=[m.host.querySelector('.d-big')].concat([].slice.call(m.host.querySelectorAll('.dl-num')));
-    nodes.forEach(function(n){ if(!n) return; var t=parseFloat(n.textContent); if(isNaN(t)) return; var dur=1000, st=null;
+    nodes.forEach(function(n){ if(!n) return; var t=parseFloat(String(n.textContent).replace(/[^0-9.]/g,'')); if(isNaN(t)) return; var dur=1000, st=null;
       function step(ts){ if(!st)st=ts; var p=Math.min((ts-st)/dur,1), e=1-Math.pow(1-p,3);
-        n.textContent=(t*e).toFixed(1)+'%'; if(p<1){ requestAnimationFrame(step); } else { n.textContent=t.toFixed(1)+'%'; } }
+        n.textContent=pc(t*e); if(p<1){ requestAnimationFrame(step); } else { n.textContent=pc(t); } }
       requestAnimationFrame(step);
     });
   }
